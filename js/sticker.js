@@ -107,7 +107,7 @@ export function buildStickerSVG(state, opts = {}) {
     viewBox: `0 0 ${vb.width} ${vb.height}`,
     width: vb.width,
     height: vb.height,
-    'data-hexsticker': 'true',
+    'data-hexlogo': 'true',
   });
 
   const contentScale = state.white_around_sticker ? WHITE_MARGIN_SCALE : 1;

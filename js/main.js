@@ -207,9 +207,9 @@ function setupImageInput() {
 // ---------------------------------------------------------------------------
 
 function baseFileName(state) {
-  const trimmed = (state.package || 'hexsticker').trim();
+  const trimmed = (state.package || 'hexlogo').trim();
   const safe = trimmed.replace(/[^A-Za-z0-9_.-]/g, '_');
-  return safe.length ? safe : 'hexsticker';
+  return safe.length ? safe : 'hexlogo';
 }
 
 function setExportStatus(msg) {

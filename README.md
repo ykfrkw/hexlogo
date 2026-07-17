@@ -1,9 +1,9 @@
-# hexsticker
+# hexlogo
 
 A build-less, browser-based hexagon sticker / hex logo maker for packages, projects, and
 any brand that wants a clean six-sided badge.
 
-Live app: **https://ykfrkw.github.io/hexsticker/**
+Live app: **https://ykfrkw.github.io/hexlogo/**
 
 ## Why
 

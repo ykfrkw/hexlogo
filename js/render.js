@@ -51,7 +51,7 @@ async function fetchAndEmbedFontFace(googleFontName) {
     if (!res.ok) return '';
     cssText = await res.text();
   } catch (err) {
-    console.warn('[hexsticker] could not fetch Google Font CSS for', googleFontName, err);
+    console.warn('[hexlogo] could not fetch Google Font CSS for', googleFontName, err);
     return '';
   }
 
@@ -70,7 +70,7 @@ async function fetchAndEmbedFontFace(googleFontName) {
       const dataUri = `data:font/woff2;base64,${base64}`;
       embedded.push(block.replace(urlMatch[0], `url(${dataUri}) format('woff2')`));
     } catch (err) {
-      console.warn('[hexsticker] could not embed font file', fontUrl, err);
+      console.warn('[hexlogo] could not embed font file', fontUrl, err);
     }
   }
 
@@ -221,7 +221,7 @@ export async function exportSizeById(state, sizeId, baseName) {
 }
 
 /** Export every standard size (PNG) plus the vector SVG, each as a separate download. */
-export async function exportAllSizes(state, baseName = 'hexsticker') {
+export async function exportAllSizes(state, baseName = 'hexlogo') {
   const svgString = await exportSVG(state);
   triggerTextDownload(svgString, `${baseName}.svg`);
 
