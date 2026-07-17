@@ -1,0 +1,13 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (not required for build-less app, but guard against accidental installs)
+node_modules/
+npm-debug.log*
+
+# Local scratch
+*.local
