@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>hexsticker — hex logo maker</title>
+  <meta name="description" content="A browser-based GUI for designing hex stickers (hex logos), a front-end for the R package hexSticker." />
+
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+
+  <!-- Google Fonts: curated set used by js/fonts.js -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Muli:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Roboto+Slab:wght@400;700&family=Baloo+2:wght@400;700&family=Oswald:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>hexsticker</h1>
+    <p class="tagline">A browser front-end for the R package <a href="https://github.com/GuangchuangYu/hexSticker" target="_blank" rel="noopener">hexSticker</a></p>
+  </header>
+
+  <main class="layout">
+    <section class="preview-pane" aria-label="Live preview">
+      <div id="preview-drop-zone" class="preview-checkerboard">
+        <div id="preview-svg-container" class="preview-svg-container"></div>
+        <p class="drop-hint">Drag &amp; drop an image here to use as the subplot</p>
+      </div>
+    </section>
+
+    <aside class="control-panel" aria-label="Controls">
+
+      <details class="control-section" open>
+        <summary>Presets</summary>
+        <div id="preset-gallery" class="thumb-gallery"></div>
+      </details>
+
+      <details class="control-section" open>
+        <summary>Hexagon</summary>
+        <div class="control-grid">
+          <label class="ctl-row">
+            <span>Border width (h_size)</span>
+            <input type="range" data-key="h_size" data-role="range" min="0" max="5" step="0.1" />
+            <input type="number" data-key="h_size" data-role="number" min="0" max="5" step="0.1" />
+          </label>
+          <label class="ctl-row">
+            <span>Fill colour (h_fill)</span>
+            <input type="color" data-key="h_fill" data-role="color" />
+          </label>
+          <label class="ctl-row">
+            <span>Border colour (h_color)</span>
+            <input type="color" data-key="h_color" data-role="color" />
+          </label>
+          <label class="ctl-row ctl-checkbox">
+            <input type="checkbox" data-key="white_around_sticker" data-role="checkbox" />
+            <span>White margin around sticker</span>
+          </label>
+        </div>
+      </details>
+
+      <details class="control-section">
+        <summary>Subplot &amp; Image</summary>
+        <div class="control-grid">
+          <label class="ctl-row">
+            <span>Upload image</span>
+            <input type="file" id="image-upload" accept="image/*" />
+          </label>
+          <button type="button" id="clear-image-btn" class="btn-secondary">Remove image</button>
+          <label class="ctl-row">
+            <span>Horizontal position (s_x)</span>
+            <input type="range" data-key="s_x" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="s_x" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Vertical position (s_y)</span>
+            <input type="range" data-key="s_y" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="s_y" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Width (s_width)</span>
+            <input type="range" data-key="s_width" data-role="range" min="0.05" max="1.6" step="0.01" />
+            <input type="number" data-key="s_width" data-role="number" min="0.05" max="1.6" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Height (s_height)</span>
+            <input type="range" data-key="s_height" data-role="range" min="0.05" max="1.6" step="0.01" />
+            <input type="number" data-key="s_height" data-role="number" min="0.05" max="1.6" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Clip shape</span>
+            <select data-key="s_clip" data-role="select">
+              <option value="hex">Hexagon (default)</option>
+              <option value="circle">Circle</option>
+              <option value="none">None</option>
+            </select>
+          </label>
+          <label class="ctl-row">
+            <span>Opacity (s_opacity)</span>
+            <input type="range" data-key="s_opacity" data-role="range" min="0" max="1" step="0.05" />
+            <input type="number" data-key="s_opacity" data-role="number" min="0" max="1" step="0.05" />
+          </label>
+        </div>
+      </details>
+
+      <details class="control-section" open>
+        <summary>Package text</summary>
+        <div class="control-grid">
+          <label class="ctl-row">
+            <span>Text (package)</span>
+            <input type="text" data-key="package" data-role="text" />
+          </label>
+          <label class="ctl-row">
+            <span>Horizontal position (p_x)</span>
+            <input type="range" data-key="p_x" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="p_x" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Vertical position (p_y)</span>
+            <input type="range" data-key="p_y" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="p_y" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Size (p_size)</span>
+            <input type="range" data-key="p_size" data-role="range" min="1" max="20" step="0.5" />
+            <input type="number" data-key="p_size" data-role="number" min="1" max="20" step="0.5" />
+          </label>
+          <label class="ctl-row">
+            <span>Colour (p_color)</span>
+            <input type="color" data-key="p_color" data-role="color" />
+          </label>
+          <label class="ctl-row">
+            <span>Font (p_family)</span>
+            <select data-key="p_family" data-role="font-select"></select>
+          </label>
+          <label class="ctl-row">
+            <span>Font face (p_fontface)</span>
+            <select data-key="p_fontface" data-role="select">
+              <option value="plain">plain</option>
+              <option value="bold">bold</option>
+              <option value="italic">italic</option>
+              <option value="bold.italic">bold.italic</option>
+            </select>
+          </label>
+        </div>
+      </details>
+
+      <details class="control-section">
+        <summary>URL</summary>
+        <div class="control-grid">
+          <label class="ctl-row">
+            <span>Text (url)</span>
+            <input type="text" data-key="url" data-role="text" />
+          </label>
+          <label class="ctl-row">
+            <span>Horizontal position (u_x)</span>
+            <input type="range" data-key="u_x" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="u_x" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Vertical position (u_y)</span>
+            <input type="range" data-key="u_y" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="u_y" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Size (u_size)</span>
+            <input type="range" data-key="u_size" data-role="range" min="0.5" max="6" step="0.1" />
+            <input type="number" data-key="u_size" data-role="number" min="0.5" max="6" step="0.1" />
+          </label>
+          <label class="ctl-row">
+            <span>Colour (u_color)</span>
+            <input type="color" data-key="u_color" data-role="color" />
+          </label>
+          <label class="ctl-row">
+            <span>Font (u_family)</span>
+            <select data-key="u_family" data-role="font-select"></select>
+          </label>
+          <label class="ctl-row">
+            <span>Angle (u_angle)</span>
+            <input type="range" data-key="u_angle" data-role="range" min="-180" max="180" step="1" />
+            <input type="number" data-key="u_angle" data-role="number" min="-180" max="180" step="1" />
+          </label>
+        </div>
+      </details>
+
+      <details class="control-section">
+        <summary>Spotlight</summary>
+        <div class="control-grid">
+          <label class="ctl-row ctl-checkbox">
+            <input type="checkbox" data-key="spotlight" data-role="checkbox" />
+            <span>Enable spotlight</span>
+          </label>
+          <label class="ctl-row">
+            <span>Horizontal position (l_x)</span>
+            <input type="range" data-key="l_x" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="l_x" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Vertical position (l_y)</span>
+            <input type="range" data-key="l_y" data-role="range" min="0" max="2" step="0.01" />
+            <input type="number" data-key="l_y" data-role="number" min="0" max="2" step="0.01" />
+          </label>
+          <label class="ctl-row">
+            <span>Alpha (l_alpha)</span>
+            <input type="range" data-key="l_alpha" data-role="range" min="0" max="1" step="0.05" />
+            <input type="number" data-key="l_alpha" data-role="number" min="0" max="1" step="0.05" />
+          </label>
+        </div>
+      </details>
+
+      <details class="control-section">
+        <summary>Colour variants</summary>
+        <button type="button" id="generate-variants-btn" class="btn-secondary">Generate colour variants</button>
+        <div id="variant-gallery" class="thumb-gallery"></div>
+      </details>
+
+      <details class="control-section" open>
+        <summary>Export</summary>
+        <div class="export-grid">
+          <button type="button" class="btn-primary export-btn" data-size-id="dpi300">PNG · 300 dpi</button>
+          <button type="button" class="btn-primary export-btn" data-size-id="dpi600">PNG · 600 dpi</button>
+          <button type="button" class="btn-primary export-btn" data-size-id="dpi1200">PNG · 1200 dpi</button>
+          <button type="button" class="btn-primary export-btn" data-size-id="w512">PNG · 512px</button>
+          <button type="button" class="btn-primary export-btn" data-size-id="w1024">PNG · 1024px</button>
+          <button type="button" class="btn-primary export-btn" data-size-id="favicon48">PNG · favicon 48px</button>
+        </div>
+        <div class="export-grid">
+          <button type="button" id="export-svg-btn" class="btn-primary">Download SVG</button>
+          <button type="button" id="export-all-btn" class="btn-primary">Download all sizes</button>
+        </div>
+        <p id="export-status" class="export-status" role="status"></p>
+      </details>
+
+      <details class="control-section" open>
+        <summary>Equivalent R code</summary>
+        <pre class="r-code-block"><code id="r-code-output"></code></pre>
+        <button type="button" id="copy-rcode-btn" class="btn-secondary">Copy R code</button>
+        <span id="copy-status" class="copy-status" role="status"></span>
+      </details>
+
+    </aside>
+  </main>
+
+  <footer class="app-footer">
+    <p>
+      Geometry, parameters and defaults follow
+      <a href="https://github.com/GuangchuangYu/hexSticker" target="_blank" rel="noopener">hexSticker</a>
+      by Guangchuang Yu. No server, no build step, no external dependencies beyond Google Fonts.
+    </p>
+  </footer>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
