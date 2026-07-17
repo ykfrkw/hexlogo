@@ -10,6 +10,7 @@ import {
   viewBoxSize,
   HEX_CENTER,
   mmToDataUnits,
+  SQRT3,
 } from './geometry.js';
 import { resolveFontFamily } from './fonts.js';
 
@@ -19,22 +20,21 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 // Calibration constants (documented; tune here only).
 // ---------------------------------------------------------------------------
 
-// p_size / u_size are ggplot2 geom_text "size" values (roughly, mm of cap
-// height). We convert to an SVG font-size expressed in *data units* by
-// treating `size` as millimetres and applying a single tunable multiplier so
-// that the default package label (p_size = 8, "mypackage") fills the hex in a
-// way that visually matches the canonical hexSticker example.
+// p_size / u_size are text-size values (roughly, mm of cap height). We
+// convert to an SVG font-size expressed in *data units* by treating `size`
+// as millimetres and applying a single tunable multiplier so that the
+// default package label (p_size = 8, "mypackage") fills the hex in a
+// visually pleasing way.
 //   fontSizeDataUnits = (size_mm / 25.4) * TEXT_SCALE
 // TEXT_SCALE = 0.7 was chosen empirically: at p_size = 8 this yields a
 // font-size of ~0.22 data units, i.e. ~66px at the default 300px/unit
-// internal scale -- "mypackage" then spans roughly 70% of the hex width,
-// matching the look of hexSticker's reference logo.
+// internal scale -- "mypackage" then spans roughly 70% of the hex width.
 export const TEXT_SCALE = 0.7;
 
-// h_size is hexSticker's `size` aesthetic for the border polygon (a ggplot2
-// linewidth), not a physical unit by itself. We map it to a border width in
-// millimetres via a single tunable constant so the default h_size = 1.2
-// produces a clearly visible ~1.5mm border.
+// h_size is a linewidth-style value for the border polygon, not a physical
+// unit by itself. We map it to a border width in millimetres via a single
+// tunable constant so the default h_size = 1.2 produces a clearly visible
+// ~1.5mm border.
 //   strokeWidthMm = h_size * STROKE_MM_PER_HSIZE
 export const STROKE_MM_PER_HSIZE = 1.25;
 
@@ -211,15 +211,32 @@ export function buildStickerSVG(state, opts = {}) {
   }
 
   // -- 4. hex border polygon (on top of fill / spotlight / subplot) ------
+  // An SVG stroke is centered on its path, but the fill polygon (and the
+  // viewBox) hug the full hex outline -- so drawing the border at the same
+  // radius as the fill would clip the OUTER half of the stroke at the
+  // viewBox edge: corners look cut off and edge width looks uneven.
+  //
+  // Fix: inset the border polygon so the stroke's OUTER edge lands exactly
+  // on the full hex outline. For a hexagon of vertex-radius r, the apothem
+  // (center-to-edge distance) is a = r * sqrt(3) / 2. At the full content
+  // radius c, a = c*sqrt(3)/2. Insetting the border polygon's edge by half
+  // the stroke width d/2 must land back on that same apothem:
+  //   (k*c)*sqrt(3)/2 + d/2 = c*sqrt(3)/2  =>  k = 1 - d/(c*sqrt(3))
+  // The border polygon is then drawn at radius k*c. Using a miter join
+  // (safe here: hexagon interior angles are 120 deg, well under the default
+  // miterlimit) keeps the outer stroke boundary an exact hexagon, so there
+  // is no clipping and the border width is uniform on every edge.
   const strokeWidthMm = state.h_size * STROKE_MM_PER_HSIZE;
-  const strokeWidthPx = mmToDataUnits(strokeWidthMm) * pxPerUnit * contentScale;
+  const strokeWidthDataUnits = mmToDataUnits(strokeWidthMm);
+  const strokeWidthPx = strokeWidthDataUnits * pxPerUnit * contentScale;
+  const borderInsetScale = 1 - strokeWidthDataUnits / (contentScale * SQRT3);
   svg.appendChild(
     el('polygon', {
-      points: hexPointsAttr(pxPerUnit, HEX_CENTER.x, HEX_CENTER.y, contentScale),
+      points: hexPointsAttr(pxPerUnit, HEX_CENTER.x, HEX_CENTER.y, borderInsetScale * contentScale),
       fill: 'none',
       stroke: state.h_color,
       'stroke-width': strokeWidthPx,
-      'stroke-linejoin': 'round',
+      'stroke-linejoin': 'miter',
     })
   );
 

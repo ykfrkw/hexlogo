@@ -1,15 +1,15 @@
 // geometry.js
-// Pure geometry / unit-conversion helpers that reproduce the coordinate system
-// used by the R package hexSticker (https://github.com/GuangchuangYu/hexSticker).
+// Pure geometry / unit-conversion helpers for the hex sticker coordinate system.
 //
-// hexSticker draws a POINTY-TOP hexagon centred at data coordinates (1, 1) with
-// "radius" 1 (vertex-to-center distance), using ggplot2's default Cartesian
-// data space (y increases UPWARDS). No DOM access happens in this module.
+// We draw a POINTY-TOP hexagon centred at data coordinates (1, 1) with
+// "radius" 1 (vertex-to-center distance), in a y-up Cartesian data space
+// (y increases UPWARDS, matching most charting/plotting conventions). No DOM
+// access happens in this module.
 
 export const SQRT3 = Math.sqrt(3);
 
 // ---------------------------------------------------------------------------
-// Hexagon vertices (data space), pointy-top, matching hexSticker exactly.
+// Hexagon vertices (data space), pointy-top.
 // Order: left-upper, left-lower, bottom-point, right-lower, right-upper, top-point.
 // ---------------------------------------------------------------------------
 export const HEX_CENTER = { x: 1, y: 1 };
@@ -33,7 +33,7 @@ export const DATA_WIDTH = DATA_XMAX - DATA_XMIN; // sqrt(3) ~ 1.7320508
 export const DATA_HEIGHT = DATA_YMAX - DATA_YMIN; // 2
 
 // ---------------------------------------------------------------------------
-// Physical dimensions. hexSticker's canonical output is a "2 inch" hex:
+// Physical dimensions. The canonical output is a "2 inch" hex:
 // 43.9mm across the flats (x) by 50.8mm point-to-point (y).
 // We keep a UNIFORM scale of 1 data unit = 1 inch = 25.4mm on both axes, so
 // the hex is exactly 2 data units tall -> 50.8mm tall. The width then comes
@@ -80,9 +80,9 @@ export function standardStickerPx(dpi) {
 // ---------------------------------------------------------------------------
 // Data-space -> SVG pixel-space transform.
 //
-// SVG's y-axis points DOWN; hexSticker/ggplot data y points UP. We flip y
-// around DATA_YMAX and shift x by DATA_XMIN so the hex bounding box maps to
-// an SVG viewBox starting at (0,0).
+// SVG's y-axis points DOWN; our data space's y points UP. We flip y around
+// DATA_YMAX and shift x by DATA_XMIN so the hex bounding box maps to an SVG
+// viewBox starting at (0,0).
 //
 //   svgX = (dataX - DATA_XMIN) * pxPerUnit
 //   svgY = (DATA_YMAX - dataY) * pxPerUnit

@@ -1,7 +1,6 @@
 // state.js
-// A single plain state object mirroring the argument list of
-// hexSticker::sticker(), plus a tiny pub/sub so UI changes can trigger
-// re-renders of the preview and the R-code panel.
+// A single plain state object holding every sticker parameter, plus a tiny
+// pub/sub so UI changes trigger a re-render of the preview.
 
 export function defaultState() {
   return {
@@ -12,8 +11,8 @@ export function defaultState() {
     s_y: 0.75,
     s_width: 0.4,
     s_height: 0.5,
-    s_clip: 'hex', // 'hex' | 'circle' | 'none' -- UI extra, not a real hexSticker arg
-    s_opacity: 1, // UI extra, not a real hexSticker arg
+    s_clip: 'hex', // 'hex' | 'circle' | 'none'
+    s_opacity: 1,
 
     // --- package text -----------------------------------------------------
     package: 'mypackage',
@@ -21,13 +20,13 @@ export function defaultState() {
     p_y: 1.4,
     p_size: 8,
     p_color: '#FFFFFF',
-    p_family: 'Aller_Rg',
+    p_family: 'poppins',
     p_fontface: 'plain',
 
     // --- hexagon ------------------------------------------------------
     h_size: 1.2,
-    h_fill: '#1881C2',
-    h_color: '#87B13F',
+    h_fill: '#0B3D5C',
+    h_color: '#4FC3F7',
 
     // --- spotlight ------------------------------------------------------
     spotlight: false,
@@ -41,7 +40,7 @@ export function defaultState() {
     u_y: 0.08,
     u_size: 1.5,
     u_color: '#000000',
-    u_family: 'Aller_Rg',
+    u_family: 'poppins',
     u_angle: 30,
 
     // --- misc -------------------------------------------------------------

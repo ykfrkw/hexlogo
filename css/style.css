@@ -1,41 +1,61 @@
 /* hexsticker — style.css
-   Light/dark responsive layout. Left = live preview, right = scrollable
-   control panel. No external CSS dependencies (fonts are loaded via a
-   normal <link> in index.html). */
+   A shadcn/ui-flavoured design system implemented in plain CSS (no React,
+   no Tailwind build step -- classes below are hand-authored equivalents of
+   shadcn's Card / Button / Input / Slider / Accordion components).
+   Light/dark responsive layout: left = live preview, right = scrollable
+   control panel. No external CSS dependencies beyond the Google Fonts
+   <link> in index.html. */
 
 :root {
-  --bg: #f5f6f8;
-  --panel-bg: #ffffff;
-  --panel-border: #dde1e6;
-  --text: #1b1f24;
-  --text-muted: #5b6470;
-  --accent: #1881c2;
-  --accent-text: #ffffff;
-  --input-bg: #ffffff;
-  --input-border: #c7ccd3;
-  --checker-a: #e9ebee;
-  --checker-b: #f8f9fb;
-  --code-bg: #10141a;
-  --code-text: #d8e0ea;
-  --shadow: 0 1px 2px rgba(20, 24, 30, 0.06), 0 1px 8px rgba(20, 24, 30, 0.05);
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #18181b;
+  --radius: 0.5rem;
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --checker-a: #f4f4f5;
+  --checker-b: #ffffff;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #14161a;
-    --panel-bg: #1c1f25;
-    --panel-border: #2c313a;
-    --text: #eef1f5;
-    --text-muted: #9aa4b2;
-    --accent: #4fa8e0;
-    --accent-text: #0c1116;
-    --input-bg: #23272e;
-    --input-border: #3a4048;
-    --checker-a: #22262d;
-    --checker-b: #2a2f37;
-    --code-bg: #0b0e12;
-    --code-text: #cfe0f2;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 10px rgba(0, 0, 0, 0.25);
+    --background: #09090b;
+    --foreground: #fafafa;
+    --card: #09090b;
+    --card-foreground: #fafafa;
+    --primary: #fafafa;
+    --primary-foreground: #18181b;
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+    --border: #27272a;
+    --input: #27272a;
+    --ring: #d4d4d8;
+
+    --checker-a: #18181b;
+    --checker-b: #09090b;
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.45), 0 1px 2px -1px rgba(0, 0, 0, 0.45);
   }
 }
 
@@ -47,9 +67,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -59,8 +79,13 @@ body {
 }
 
 a {
-  color: var(--accent);
+  color: var(--foreground);
+  text-underline-offset: 3px;
 }
+
+/* ---------------------------------------------------------------- */
+/* Header / footer                                                   */
+/* ---------------------------------------------------------------- */
 
 .app-header {
   padding: 1.25rem 1.5rem 0.5rem;
@@ -69,14 +94,26 @@ a {
 .app-header h1 {
   margin: 0 0 0.15rem;
   font-size: 1.6rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .tagline {
   margin: 0;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   font-size: 0.95rem;
 }
+
+.app-footer {
+  padding: 1rem 1.5rem 1.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- */
+/* Layout                                                             */
+/* ---------------------------------------------------------------- */
 
 .layout {
   flex: 1;
@@ -117,9 +154,9 @@ a {
   width: 100%;
   max-width: 480px;
   aspect-ratio: 1.7320508 / 2;
-  border-radius: 12px;
-  border: 1px solid var(--panel-border);
-  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
   background-image: linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
     linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
     linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
@@ -137,7 +174,7 @@ a {
 }
 
 .preview-checkerboard.drag-over {
-  outline-color: var(--accent);
+  outline-color: var(--ring);
 }
 
 .preview-svg-container {
@@ -162,9 +199,9 @@ a {
   margin: 0;
   text-align: center;
   font-size: 0.75rem;
-  color: var(--text-muted);
-  background: color-mix(in srgb, var(--panel-bg) 80%, transparent);
-  border-radius: 6px;
+  color: var(--muted-foreground);
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  border-radius: var(--radius-sm);
   padding: 0.25rem 0.5rem;
   pointer-events: none;
   opacity: 0;
@@ -196,46 +233,63 @@ a {
   }
 }
 
+/* ---------------------------------------------------------------- */
+/* Card (each <details class="control-section">) +                  */
+/* Accordion-style summary (shadcn Accordion look)                   */
+/* ---------------------------------------------------------------- */
+
 .control-section {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 10px;
-  padding: 0.25rem 0.9rem 0.85rem;
-  box-shadow: var(--shadow);
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 0.9rem 0.85rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .control-section > summary {
   cursor: pointer;
-  padding: 0.6rem 0;
-  font-weight: 600;
+  padding: 0.75rem 0;
+  font-weight: 500;
   font-size: 0.95rem;
   list-style: none;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.4rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.control-section[open] > summary {
+  border-bottom-color: var(--border);
+  margin-bottom: 0.6rem;
 }
 
 .control-section > summary::-webkit-details-marker {
   display: none;
 }
 
-.control-section > summary::before {
-  content: '▸';
-  display: inline-block;
+.control-section > summary::after {
+  content: '';
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 1.5px solid var(--muted-foreground);
+  border-bottom: 1.5px solid var(--muted-foreground);
+  transform: rotate(45deg);
   transition: transform 0.15s ease;
-  color: var(--text-muted);
-  font-size: 0.8rem;
 }
 
-.control-section[open] > summary::before {
-  transform: rotate(90deg);
+.control-section[open] > summary::after {
+  transform: rotate(-135deg);
 }
 
 .control-grid {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  margin-top: 0.25rem;
+  margin-top: 0.1rem;
 }
 
 .ctl-row {
@@ -247,7 +301,9 @@ a {
 }
 
 .ctl-row span {
-  color: var(--text-muted);
+  color: var(--foreground);
+  font-weight: 500;
+  font-size: 0.875rem;
   grid-column: 1 / -1;
 }
 
@@ -272,72 +328,161 @@ a {
   grid-column: auto;
 }
 
-input[type='range'] {
-  width: 100%;
-  accent-color: var(--accent);
-}
+/* ---------------------------------------------------------------- */
+/* Inputs (shadcn Input)                                             */
+/* ---------------------------------------------------------------- */
 
 input[type='number'],
 input[type='text'],
 select {
   width: 100%;
-  background: var(--input-bg);
-  color: var(--text);
-  border: 1px solid var(--input-border);
-  border-radius: 6px;
-  padding: 0.3rem 0.4rem;
-  font-size: 0.85rem;
+  height: 2.25rem;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--input);
+  border-radius: var(--radius-md);
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type='number']:focus-visible,
+input[type='text']:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
 }
 
 input[type='color'] {
   width: 2.6rem;
-  height: 2rem;
-  padding: 0;
-  border: 1px solid var(--input-border);
-  border-radius: 6px;
-  background: var(--input-bg);
+  height: 2.25rem;
+  padding: 0.2rem;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-md);
+  background: transparent;
 }
 
 input[type='file'] {
-  color: var(--text);
+  color: var(--foreground);
   font-size: 0.8rem;
 }
 
+/* ---------------------------------------------------------------- */
+/* Checkbox                                                           */
+/* ---------------------------------------------------------------- */
+
 input[type='checkbox'] {
-  accent-color: var(--accent);
+  accent-color: var(--primary);
   width: 1.05rem;
   height: 1.05rem;
 }
 
 /* ---------------------------------------------------------------- */
-/* Buttons                                                            */
+/* Slider (shadcn Slider look, custom-drawn)                         */
+/* ---------------------------------------------------------------- */
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 1.25rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range']:focus-visible {
+  outline: none;
+}
+
+/* Track */
+input[type='range']::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--secondary);
+}
+input[type='range']::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--secondary);
+}
+input[type='range']::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+/* Thumb */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease;
+}
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+input[type='range']::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease;
+}
+input[type='range']:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+
+/* ---------------------------------------------------------------- */
+/* Buttons (shadcn Button: default + outline variants)               */
 /* ---------------------------------------------------------------- */
 
 button {
   font-family: inherit;
   cursor: pointer;
-  border-radius: 7px;
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
-  font-size: 0.85rem;
-  padding: 0.45rem 0.7rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  height: 2.25rem;
+  padding: 0 1rem;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
 }
 
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+
+/* default variant */
 .btn-primary {
-  background: var(--accent);
-  color: var(--accent-text);
-  font-weight: 600;
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 .btn-primary:hover {
-  filter: brightness(1.05);
+  opacity: 0.9;
 }
 
+/* outline variant */
 .btn-secondary {
   background: transparent;
-  color: var(--text);
-  border-color: var(--input-border);
+  color: var(--foreground);
+  border-color: var(--input);
 }
 .btn-secondary:hover {
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  background: var(--accent);
+  color: var(--accent-foreground);
 }
 
 .export-grid {
@@ -347,11 +492,10 @@ button {
   margin: 0.4rem 0;
 }
 
-.export-status,
-.copy-status {
+.export-status {
   display: block;
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   min-height: 1.1em;
 }
 
@@ -367,20 +511,23 @@ button {
 }
 
 .thumb-btn {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  border-radius: 8px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 0.35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
   cursor: pointer;
+  height: auto;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .thumb-btn:hover,
 .thumb-btn:focus-visible {
-  border-color: var(--accent);
+  border-color: var(--ring);
+  outline: none;
 }
 
 .thumb-btn svg {
@@ -391,36 +538,7 @@ button {
 
 .thumb-label {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: var(--muted-foreground);
   text-align: center;
   line-height: 1.2;
-}
-
-/* ---------------------------------------------------------------- */
-/* R code panel                                                       */
-/* ---------------------------------------------------------------- */
-
-.r-code-block {
-  background: var(--code-bg);
-  color: var(--code-text);
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 0.72rem;
-  line-height: 1.45;
-  overflow-x: auto;
-  max-height: 260px;
-  overflow-y: auto;
-  margin: 0.35rem 0;
-}
-
-.r-code-block code {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  white-space: pre;
-}
-
-.app-footer {
-  padding: 1rem 1.5rem 1.75rem;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  text-align: center;
 }

@@ -39,10 +39,15 @@ function arrayBufferToBase64(buffer) {
 async function fetchAndEmbedFontFace(googleFontName) {
   const familyParam = googleFontName.replace(/ /g, '+');
   const cssUrl = `https://fonts.googleapis.com/css2?family=${familyParam}:ital,wght@0,400;0,700;1,400;1,700&display=swap`;
+  // Some families (e.g. Bebas Neue, Righteous, Lobster) only ship weight 400,
+  // and the css2 API returns HTTP 400 when the axis spec asks for weights the
+  // family doesn't have -- so fall back to the plain form (default 400 only).
+  const fallbackCssUrl = `https://fonts.googleapis.com/css2?family=${familyParam}&display=swap`;
 
   let cssText;
   try {
-    const res = await fetch(cssUrl);
+    let res = await fetch(cssUrl);
+    if (!res.ok) res = await fetch(fallbackCssUrl);
     if (!res.ok) return '';
     cssText = await res.text();
   } catch (err) {

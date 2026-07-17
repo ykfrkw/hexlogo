@@ -1,8 +1,9 @@
 // presets.js
 // A handful of starter variants (colour scheme + layout) plus a "generate
-// colour variants" helper that palette-shifts the current state into N
-// pickable options. Thumbnails are just buildStickerSVG() rendered small,
-// so gallery and full preview are guaranteed to look the same.
+// colour variants" helper that builds harmonious palette shifts of the
+// current state into N pickable options. Thumbnails are just
+// buildStickerSVG() rendered small, so gallery and full preview are
+// guaranteed to look the same.
 
 import { defaultState } from './state.js';
 import { buildStickerSVG } from './sticker.js';
@@ -59,59 +60,75 @@ const SAMPLE_CIRCUIT_DATA_URI = svgToDataUri(SAMPLE_CIRCUIT_SVG);
  */
 export const PRESETS = [
   {
-    id: 'classic-blue',
-    name: 'Classic Blue',
+    id: 'ocean',
+    name: 'Ocean',
     overrides: {
-      package: 'mypackage',
-      h_fill: '#1881C2',
-      h_color: '#87B13F',
+      package: 'oceanpkg',
+      h_fill: '#0B3D5C',
+      h_color: '#4FC3F7',
       p_color: '#FFFFFF',
       spotlight: false,
       url: '',
     },
   },
   {
-    id: 'midnight-spotlight',
-    name: 'Midnight Spotlight',
+    id: 'nord',
+    name: 'Nord',
     overrides: {
-      package: 'nightowl',
-      h_fill: '#151A2D',
-      h_color: '#6C63FF',
-      p_color: '#FFFFFF',
+      package: 'nordic',
+      h_fill: '#2E3440',
+      h_color: '#88C0D0',
+      p_color: '#ECEFF4',
+      spotlight: false,
+      url: 'github.com/you/nord',
+      u_color: '#D8DEE9',
+    },
+  },
+  {
+    id: 'catppuccin',
+    name: 'Catppuccin',
+    overrides: {
+      package: 'catppkg',
+      h_fill: '#1E1E2E',
+      h_color: '#CBA6F7',
+      p_color: '#CDD6F4',
       spotlight: true,
       l_x: 1,
       l_y: 1.3,
-      l_alpha: 0.5,
-      url: 'example.com',
-      subplotImage: SAMPLE_CIRCUIT_DATA_URI,
-      subplotImageName: 'sample-logo-circuit.svg',
-      s_x: 1,
-      s_y: 0.72,
-      s_width: 0.42,
-      s_height: 0.42,
+      l_alpha: 0.35,
     },
   },
   {
-    id: 'sunrise-url',
-    name: 'Sunrise + URL',
+    id: 'rose-pine',
+    name: 'Rosé Pine',
     overrides: {
-      package: 'sunrise',
-      h_fill: '#FF8C42',
-      h_color: '#FFD23F',
-      p_color: '#2B1B17',
+      package: 'rosepine',
+      h_fill: '#191724',
+      h_color: '#EBBCBA',
+      p_color: '#E0DEF4',
       spotlight: false,
-      url: 'github.com/you/sunrise',
-      u_color: '#2B1B17',
     },
   },
   {
-    id: 'forest-subplot',
-    name: 'Forest (image-forward)',
+    id: 'gruvbox',
+    name: 'Gruvbox',
     overrides: {
-      package: 'forest',
-      h_fill: '#274029',
-      h_color: '#A9C46C',
-      p_color: '#F2F5EA',
+      package: 'gruvbox',
+      h_fill: '#282828',
+      h_color: '#FABD2F',
+      p_color: '#EBDBB2',
+      p_family: 'jetbrains-mono',
+      spotlight: false,
+    },
+  },
+  {
+    id: 'sage',
+    name: 'Sage',
+    overrides: {
+      package: 'sage',
+      h_fill: '#3A5A40',
+      h_color: '#A3B18A',
+      p_color: '#DAD7CD',
       p_y: 0.35,
       subplotImage: SAMPLE_LEAF_DATA_URI,
       subplotImageName: 'sample-logo-leaf.svg',
@@ -123,31 +140,33 @@ export const PRESETS = [
     },
   },
   {
-    id: 'mono-slate',
-    name: 'Mono Slate',
+    id: 'sunset',
+    name: 'Sunset',
     overrides: {
-      package: 'slatekit',
-      h_fill: '#2E3440',
-      h_color: '#D8DEE9',
-      p_color: '#ECEFF4',
-      spotlight: false,
-      white_around_sticker: true,
+      package: 'sunset',
+      h_fill: '#E76F51',
+      h_color: '#F4A261',
+      p_color: '#FFF8F0',
+      subplotImage: SAMPLE_CIRCUIT_DATA_URI,
+      subplotImageName: 'sample-logo-circuit.svg',
+      s_x: 1,
+      s_y: 0.72,
+      s_width: 0.42,
+      s_height: 0.42,
+      spotlight: true,
+      l_alpha: 0.25,
     },
   },
   {
-    id: 'candy-pop',
-    name: 'Candy Pop',
+    id: 'paper',
+    name: 'Paper',
     overrides: {
-      package: 'candy',
-      h_fill: '#FF4D8D',
-      h_color: '#FFE066',
-      p_color: '#FFFFFF',
-      spotlight: true,
-      l_x: 0.75,
-      l_y: 1.4,
-      l_alpha: 0.35,
-      url: 'candy.pkg',
-      u_color: '#FFFFFF',
+      package: 'paperpkg',
+      h_fill: '#FAFAFA',
+      h_color: '#18181B',
+      p_color: '#18181B',
+      white_around_sticker: true,
+      spotlight: false,
     },
   },
 ];
@@ -162,8 +181,9 @@ export function renderThumbnail(state, { pxPerUnit = 60 } = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Colour-variant generation: hue-rotate the current fill/border/url colours
-// into N new palette options, keeping text colour readable against the fill.
+// Colour-variant generation: derive harmonious colour schemes (complementary,
+// analogous, triadic, lightness-shifted) from the current fill colour into N
+// new palette options, keeping text colour readable against the fill.
 // ---------------------------------------------------------------------------
 
 function hexToRgb(hex) {
@@ -221,10 +241,12 @@ function hslToRgb({ h, s, l }) {
   return { r: (rp + m) * 255, g: (gp + m) * 255, b: (bp + m) * 255 };
 }
 
-function rotateHue(hex, degrees) {
-  const hsl = rgbToHsl(hexToRgb(hex));
-  hsl.h = (hsl.h + degrees + 360) % 360;
-  return rgbToHex(hslToRgb(hsl));
+function shiftHsl(hsl, { h = 0, s = 0, l = 0 } = {}) {
+  return {
+    h: (hsl.h + h + 360) % 360,
+    s: Math.min(1, Math.max(0, hsl.s + s)),
+    l: Math.min(1, Math.max(0.06, hsl.l + l)),
+  };
 }
 
 function relativeLuminance(hex) {
@@ -236,22 +258,66 @@ function readableTextColor(bgHex) {
   return relativeLuminance(bgHex) > 0.55 ? '#111111' : '#FFFFFF';
 }
 
+// Named colour-harmony schemes. Each maps the base fill hue/sat/light to a
+// new fill and border hue -- combining hue rotation (complementary /
+// analogous / triadic) with a lightness shift so fill and border stay
+// visually distinct.
+const COLOR_SCHEMES = [
+  {
+    name: 'Complementary',
+    fill: (base) => shiftHsl(base, { h: 180 }),
+    border: (base) => shiftHsl(base, { h: 180 + 25, l: 0.18 }),
+  },
+  {
+    name: 'Analogous +30',
+    fill: (base) => shiftHsl(base, { h: 30 }),
+    border: (base) => shiftHsl(base, { h: 60, l: 0.18 }),
+  },
+  {
+    name: 'Analogous -30',
+    fill: (base) => shiftHsl(base, { h: -30 }),
+    border: (base) => shiftHsl(base, { h: -60, l: 0.18 }),
+  },
+  {
+    name: 'Triadic +120',
+    fill: (base) => shiftHsl(base, { h: 120 }),
+    border: (base) => shiftHsl(base, { h: 120 + 25, l: 0.18 }),
+  },
+  {
+    name: 'Triadic -120',
+    fill: (base) => shiftHsl(base, { h: -120 }),
+    border: (base) => shiftHsl(base, { h: -120 + 25, l: 0.18 }),
+  },
+  {
+    name: 'Deep & Light',
+    fill: (base) => shiftHsl(base, { h: 10, l: -0.16 }),
+    border: (base) => shiftHsl(base, { h: 10, l: 0.3 }),
+  },
+];
+
 /**
- * Generate `count` palette variants of `baseState` by rotating hue around
- * the colour wheel, evenly spaced, starting from an offset so the first
- * variant isn't identical to the input.
+ * Generate `count` palette variants of `baseState` by deriving harmonious
+ * fill/border hues from the current h_fill (complementary, analogous,
+ * triadic, lightness-shifted), keeping text colour readable against the
+ * new fill.
  */
 export function generateColorVariants(baseState, count = 6) {
-  const step = 360 / count;
+  const baseHsl = rgbToHsl(hexToRgb(baseState.h_fill));
   const variants = [];
-  for (let i = 1; i <= count; i += 1) {
-    const degrees = step * i;
-    const h_fill = rotateHue(baseState.h_fill, degrees);
-    const h_color = rotateHue(baseState.h_color, degrees + 20);
+  for (let i = 0; i < count; i += 1) {
+    const scheme = COLOR_SCHEMES[i % COLOR_SCHEMES.length];
+    // Once we've cycled through every named scheme, nudge the hue further so
+    // additional variants (count > COLOR_SCHEMES.length) aren't duplicates.
+    const cycle = Math.floor(i / COLOR_SCHEMES.length);
+    const jitter = cycle * 12;
+    const fillHsl = shiftHsl(scheme.fill(baseHsl), { h: jitter });
+    const borderHsl = shiftHsl(scheme.border(baseHsl), { h: jitter });
+    const h_fill = rgbToHex(hslToRgb(fillHsl));
+    const h_color = rgbToHex(hslToRgb(borderHsl));
     const p_color = readableTextColor(h_fill);
     variants.push({
-      id: `variant-${i}-${Math.round(degrees)}`,
-      name: `Variant ${i}`,
+      id: `variant-${i + 1}-${scheme.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      name: scheme.name,
       state: { ...baseState, h_fill, h_color, p_color },
     });
   }

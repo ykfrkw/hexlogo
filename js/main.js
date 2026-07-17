@@ -1,13 +1,12 @@
 // main.js
 // Wires the DOM controls to state.js, re-renders the preview (sticker.js)
-// and R-code panel (rcode.js) on every change, and drives preset/variant
-// galleries plus PNG/SVG export (render.js).
+// on every change, and drives preset/variant galleries plus PNG/SVG export
+// (render.js).
 
 import { store, defaultState } from './state.js';
 import { buildStickerSVG } from './sticker.js';
 import { PRESETS, applyPreset, renderThumbnail, generateColorVariants } from './presets.js';
-import { toRCode } from './rcode.js';
-import { FONT_LIST } from './fonts.js';
+import { FONT_LIST, DEFAULT_FONT_ID } from './fonts.js';
 import { exportPNG, exportSVG, exportAllSizes, allExportSizes, triggerDownload, triggerTextDownload } from './render.js';
 
 const PREVIEW_PX_PER_UNIT = 360;
@@ -18,9 +17,6 @@ const dropZone = document.getElementById('preview-drop-zone');
 const presetGallery = document.getElementById('preset-gallery');
 const variantGallery = document.getElementById('variant-gallery');
 const generateVariantsBtn = document.getElementById('generate-variants-btn');
-const rCodeOutput = document.getElementById('r-code-output');
-const copyRCodeBtn = document.getElementById('copy-rcode-btn');
-const copyStatus = document.getElementById('copy-status');
 const imageUpload = document.getElementById('image-upload');
 const clearImageBtn = document.getElementById('clear-image-btn');
 const exportStatus = document.getElementById('export-status');
@@ -32,24 +28,31 @@ const exportAllBtn = document.getElementById('export-all-btn');
 // ---------------------------------------------------------------------------
 
 function familyToSelectId(value) {
-  if (!value) return FONT_LIST[0].id;
+  if (!value) return DEFAULT_FONT_ID;
   const byId = FONT_LIST.find((f) => f.id === value);
   if (byId) return byId.id;
   const byGoogleName = FONT_LIST.find((f) => f.googleFont.toLowerCase() === String(value).toLowerCase());
   if (byGoogleName) return byGoogleName.id;
-  if (String(value).toLowerCase().startsWith('aller')) return FONT_LIST[0].id;
-  return FONT_LIST[0].id;
+  return DEFAULT_FONT_ID;
 }
 
 function populateFontSelects() {
   document.querySelectorAll('select[data-role="font-select"]').forEach((select) => {
     select.innerHTML = '';
+    const groups = new Map();
     for (const font of FONT_LIST) {
+      let group = groups.get(font.group);
+      if (!group) {
+        group = document.createElement('optgroup');
+        group.label = font.group;
+        groups.set(font.group, group);
+        select.appendChild(group);
+      }
       const opt = document.createElement('option');
       opt.value = font.id;
       opt.textContent = font.label;
       opt.style.fontFamily = font.value;
-      select.appendChild(opt);
+      group.appendChild(opt);
     }
   });
 }
@@ -120,10 +123,6 @@ function renderPreview(state) {
   previewContainer.innerHTML = '';
   const svg = buildStickerSVG(state, { pxPerUnit: PREVIEW_PX_PER_UNIT });
   previewContainer.appendChild(svg);
-}
-
-function renderRCode(state) {
-  rCodeOutput.textContent = toRCode(state);
 }
 
 // ---------------------------------------------------------------------------
@@ -261,24 +260,6 @@ function setupExportButtons() {
 }
 
 // ---------------------------------------------------------------------------
-// R code copy button
-// ---------------------------------------------------------------------------
-
-function setupCopyButton() {
-  copyRCodeBtn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(rCodeOutput.textContent);
-      copyStatus.textContent = 'Copied!';
-    } catch (err) {
-      copyStatus.textContent = 'Copy failed (select and copy manually).';
-    }
-    setTimeout(() => {
-      copyStatus.textContent = '';
-    }, 1800);
-  });
-}
-
-// ---------------------------------------------------------------------------
 // Boot
 // ---------------------------------------------------------------------------
 
@@ -287,7 +268,6 @@ function main() {
   const controls = setupControls();
   setupImageInput();
   setupExportButtons();
-  setupCopyButton();
 
   generateVariantsBtn.addEventListener('click', renderVariantGallery);
 
@@ -296,7 +276,6 @@ function main() {
   store.subscribe((state) => {
     refreshControls(controls, state);
     renderPreview(state);
-    renderRCode(state);
   });
 
   // Initial render.
