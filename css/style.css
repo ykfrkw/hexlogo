@@ -292,6 +292,12 @@ a {
   margin-top: 0.1rem;
 }
 
+/* The hidden attribute must always win over author display rules (e.g. the
+   grid on .ctl-row), or JS-toggled rows stay visible. */
+[hidden] {
+  display: none !important;
+}
+
 .ctl-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 4.2rem;
@@ -541,4 +547,88 @@ button:focus-visible {
   color: var(--muted-foreground);
   text-align: center;
   line-height: 1.2;
+}
+
+/* ---------------------------------------------------------------- */
+/* Subplot & Image: button row                                       */
+/* ---------------------------------------------------------------- */
+
+.ctl-btn-group {
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.ctl-btn-group button {
+  width: 100%;
+}
+.ctl-btn-group button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------- */
+/* Crop modal (shadcn Dialog look)                                   */
+/* ---------------------------------------------------------------- */
+
+.crop-modal {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  margin: auto;
+}
+
+.crop-modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.crop-modal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+  max-width: min(90vw, 78vmin);
+}
+
+.crop-modal-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.crop-canvas-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(45deg, var(--checker-a) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--checker-a) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--checker-a) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--checker-a) 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  background-color: var(--checker-b);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+#crop-canvas {
+  display: block;
+  max-width: 70vmin;
+  max-height: 70vmin;
+  width: auto;
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.crop-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }

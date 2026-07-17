@@ -5,8 +5,12 @@
 export function defaultState() {
   return {
     // --- subplot (image) -----------------------------------------------
-    subplotImage: null, // data URL of uploaded image, or null
+    subplotImage: null, // data URL of the PROCESSED image (crop + white->transparent applied), or null
+    subplotOriginal: null, // data URL of the as-uploaded (unprocessed) image, or null
     subplotImageName: '', // original file name, for reference only
+    s_cropRect: null, // null (no crop) | {x, y, w, h} normalized 0..1 fractions of subplotOriginal's natural size
+    s_whiteTransparent: false, // make near-white pixels transparent
+    s_whiteThreshold: 240, // 128..255 -- min(R,G,B) at/above this becomes fully transparent
     s_x: 0.8,
     s_y: 0.75,
     s_width: 0.4,
